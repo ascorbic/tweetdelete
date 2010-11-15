@@ -4,8 +4,7 @@ var util = require('connect/utils');
 
 var OAuth= require('oauth').OAuth;
 var url = require("url");
-var RedisStore = require('connect-redis');
-var redis = new RedisStore({ maxAge: 300000 })
+var memstore = new MemoryStore()
 
 var tt = "https://api.twitter.com/1/";
 
@@ -243,14 +242,14 @@ app.get ('/callback', function(req, res, params) {
 
 var server= connect.createServer( 
                       connect.cookieDecoder(), 
-                      connect.session({ store: redis}),
+                      connect.session({ store: memstore}),
                       connect.staticProvider(__dirname + '/public'),
 
 					  connect.router(routes)
                     
 );
-server.listen(3000);
-
+/*server.listen(3000);*/
+module.exports = server;
 
 var io = require('socket.io'); 
 var socket = io.listen(server); 
@@ -265,7 +264,7 @@ socket.on('connection', function(client){
 		var cookies = util.parseCookie(cookie);
 		sid = cookies['connect.sid'];
 
-		redis.get(sid, function(err, data) {		
+		memstore.get(sid, function(err, data) {		
 				fn(err,data);
 			}
 		);
@@ -314,7 +313,7 @@ socket.on('connection', function(client){
 											var nonce = oa._getNonce(56);
 											ret.nonce = nonce;
 											session.nonce = nonce;
-											redis.set(sid, session);
+											memstore.set(sid, session);
 										}
 										client.send(JSON.stringify(ret));
 									}
