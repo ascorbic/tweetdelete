@@ -248,7 +248,7 @@
                 $('#doDelete').hide();
                 $('#progressBar').progressbar();
                 
-                var socket = new io.Socket('localhost'); 
+                var socket = new io.Socket('tweetd.lt'); 
                 socket.on('connect', function(){
                     console.log('connected');
                     socket.send(
