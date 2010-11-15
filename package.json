@@ -1,0 +1,10 @@
+{
+"name":"TweetDelete",
+"version":"0.0.1",
+"dependencies":{
+"connect": "",
+"npm": "",
+"oauth": "",
+"socket.io": "",
+"spark": ""
+}
