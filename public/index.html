@@ -247,10 +247,9 @@
                 $('#person').hide();
                 $('#doDelete').hide();
                 $('#progressBar').progressbar();
-                
-                var socket = new io.Socket('tweetd.lt'); 
+                var socket = new io.Socket('tweetd.lt',{port: 3000, transports:  ['websocket','htmlfile', 'xhr-multipart', 'xhr-polling', 'jsonp-polling'],
+                    rememberTransport: false}); 
                 socket.on('connect', function(){
-                    console.log('connected');
                     socket.send(
                         JSON.stringify({
                             method: 'delete',
@@ -265,7 +264,7 @@
                     
                 }) 
                 socket.on('message', function(message){
-                    console.log(message);
+                    // console.log(message);
                     var m = JSON.parse(message);
                     $('#progressBar').progressbar('value', m.done / m.of * 100);
                     $('#progressText').text("Deleted " + m.done + " of " + m.of + " tweets");

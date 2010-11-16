@@ -260,14 +260,22 @@ socket.on('connection', function(client){
 	var sid = null;
 	
 	client.connectSession = function(fn) {
-		var cookie = client.request.headers.cookie;
-		var cookies = util.parseCookie(cookie);
-		sid = cookies['connect.sid'];
-
-		memstore.get(sid, function(err, data) {		
-				fn(err,data);
+		if (client.request && client.request.headers) {
+			var cookie = client.request.headers.cookie;
+			var cookies = util.parseCookie(cookie);
+			sid = cookies['connect.sid'];
+			if (sid) {
+				memstore.get(sid, function(err, data) {		
+						fn(err,data);
+					}
+				);
+			} else {
+				fn("Session not found");
 			}
-		);
+		} else {	
+			fn("Cookie not found");
+		}
+		
 	};
 	
 	
